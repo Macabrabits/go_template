@@ -9,6 +9,11 @@ func Initialize() {
 	// Initialize Router
 	router := gin.Default()
 
+	err := router.SetTrustedProxies(nil) //TODO: understand the utility of that
+	if err != nil {
+		panic(err)
+	}
+
 	cfg := configs.GetConfig()
 
 	// Initialize Routes

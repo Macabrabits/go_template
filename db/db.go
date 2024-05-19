@@ -3,9 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
-
 	"github.com/macabrabits/go_template/configs"
+	"log"
 )
 
 func Db() *sql.DB {
@@ -21,6 +20,6 @@ func Db() *sql.DB {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	fmt.Println("Connectedd!")
+	fmt.Println("Connected!")
 	return db
 }

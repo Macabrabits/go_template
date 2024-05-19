@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"os"
 )
@@ -25,10 +24,9 @@ func GetConfig() Config {
 			User:   config("root", os.Getenv("DBUSER")),
 			Passwd: config("root", os.Getenv("DBPASS")),
 			Net:    "tcp",
-			Addr:   "mysql:3306",
+			Addr:   config("localhost", os.Getenv("DBHOST")) + ":3306",
 			DBName: "app",
 		},
 	}
-	fmt.Println(cfg)
 	return cfg
 }

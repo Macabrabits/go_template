@@ -14,3 +14,7 @@ docker-compose exec app sh -c "swag init"
 docker-compose exec app bash
 
 sudo chown dev:dev */*
+
+
+
+docker-compose -f docker-compose.yml -f docker-compose-debug.yml up -d

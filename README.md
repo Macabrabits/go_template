@@ -38,13 +38,16 @@
     OK - config file, env
     OK - service layer pattern
     OK - OpenAPI configuration
-    OK - some db integration
-    create repository pattern
+    OK - some db integration    
+    OK - debug in container
+    vulnerability scan
+    migrations
     unit tests
     production build / ci/cd pipeline
     authentication
     authorization
     implement logs, metrics and traces monitoring
+    create repository pattern
     
     
 

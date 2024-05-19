@@ -15,15 +15,25 @@ RUN go install github.com/cosmtrek/air@latest && \
 COPY . .
 CMD ["air", "-c", ".air.toml"]
 #------------------------------------------------
+FROM golang:1.22-alpine AS dev2
+# Install air for hot reload & delve for debugging
+WORKDIR /app
+RUN go install github.com/cosmtrek/air@latest && \
+  go install github.com/go-delve/delve/cmd/dlv@latest
+COPY go.mod go.sum ./
+RUN go mod download
+CMD ["air", "-c", ".air.toml"]
 
-FROM build-base AS build-production
-RUN useradd -u 1001 nonroot
-COPY . .
-RUN go build \
+#------------------------------------------------
+  FROM build-base AS build-production
+  RUN useradd -u 1001 nonroot
+  COPY . .
+  RUN go build \
   -ldflags="-linkmode external -extldflags -static" \
   -tags netgo \
   -o api-golang
-
+  
+#------------------------------------------------
 FROM scratch
 ENV GIN_MODE=release
 WORKDIR /

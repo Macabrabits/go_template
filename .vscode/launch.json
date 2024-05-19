@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Golang local",
+        "type": "go",
+        "debugAdapter": "dlv-dap",
+        "mode": "auto",
+        "request": "launch",
+        "program": "${workspaceFolder}"        
+      },
+      {
+        "name": "Golang container",
+        "type": "go",
+        "debugAdapter": "dlv-dap",
+        "mode": "remote",
+        "request": "attach",
+        "port": 4000,
+        "remotePath": "/app",
+        "substitutePath": [
+          {
+            "from": "${workspaceFolder}",
+            "to": "/app"
+          }
+        ]
+      }
+    ]
+  }
