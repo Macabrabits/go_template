@@ -40,6 +40,7 @@
     OK - OpenAPI configuration
     OK - some db integration    
     OK - debug in container
+    sqlc
     vulnerability scan
     migrations
     unit tests

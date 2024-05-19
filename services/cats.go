@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/macabrabits/go_template/db"
+	db "github.com/macabrabits/go_template/db"
 )
 
 type Cat struct {
@@ -10,6 +10,10 @@ type Cat struct {
 	Name  string `json:"name"  validate:"required"`
 	Age   int    `json:"age"   validate:"required,gte=0,lte=25"`
 	Breed string `json:"breed" validate:"required"`
+}
+
+func toTest(name string) string {
+	return "hello " + name
 }
 
 func GetCats() (gin.H, error) {

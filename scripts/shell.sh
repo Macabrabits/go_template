@@ -18,3 +18,5 @@ sudo chown dev:dev */*
 
 
 docker-compose -f docker-compose.yml -f docker-compose-debug.yml up -d
+
+go test -timeout 30s github.com/macabrabits/go_template/services -cover
