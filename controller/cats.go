@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/macabrabits/go_template/db/sqlc"
 	"github.com/macabrabits/go_template/services"
-	"github.com/macabrabits/go_template/sqlc"
 	"net/http"
 )
 

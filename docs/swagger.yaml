@@ -19,11 +19,19 @@ definitions:
   services.Cat:
     properties:
       age:
+        maximum: 25
+        minimum: 0
         type: integer
       breed:
         type: string
+      id:
+        type: integer
       name:
         type: string
+    required:
+    - age
+    - breed
+    - name
     type: object
 externalDocs:
   description: OpenAPI

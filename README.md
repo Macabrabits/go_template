@@ -6,6 +6,9 @@
     Hot reload:
     https://courses.devopsdirective.com/docker-beginner-to-pro/lessons/06-building-container-images/03-api-golang-dockerfile
 
+    Migrations:
+    https://github.com/golang-migrate/migrate
+
 
 
 
@@ -40,15 +43,14 @@
     OK - OpenAPI configuration
     OK - some db integration    
     OK - debug in container
-    sqlc
-    vulnerability scan
-    migrations
-    unit tests
+    OK - sqlc
+    OK - vulnerability scan
+    OK - migrations
     production build / ci/cd pipeline
+    implement logs, metrics and traces monitoring
+    unit tests - suffering
     authentication
     authorization
-    implement logs, metrics and traces monitoring
-    create repository pattern
     
     
 

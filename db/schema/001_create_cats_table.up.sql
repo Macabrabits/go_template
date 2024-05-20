@@ -1,7 +1,6 @@
-CREATE TABLE `cats` (
+CREATE TABLE IF NOT EXISTS `cats` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
     `name` VARCHAR(100) NOT NULL ,
     `age` TINYINT NOT NULL ,
-    `breed` VARCHAR(100) NOT NULL ,
-    PRIMARY KEY (`id`)
+    `breed` VARCHAR(100) NOT NULL
 ) ENGINE = InnoDB;

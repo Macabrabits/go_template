@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	sqlc "github.com/macabrabits/go_template/sqlc"
+	"github.com/macabrabits/go_template/db/sqlc"
 )
 
 type CatsService struct {
@@ -18,13 +18,15 @@ type Cat struct {
 	Breed string `json:"breed" validate:"required"`
 }
 
+// var sqlcNew = sqlc.New
+
 func NewCatsService(db *sql.DB) CatsService {
 	return CatsService{db}
 }
 
-func (s *CatsService) GetCats() (gin.H, error) {
+func (svc *CatsService) GetCats() (gin.H, error) {
 	ctx := context.Background()
-	queries := sqlc.New(s.db)
+	queries := sqlc.New(svc.db)
 	cats, err := queries.ListCats(ctx)
 	if err != nil {
 		return gin.H{}, err
@@ -36,9 +38,9 @@ func (s *CatsService) GetCats() (gin.H, error) {
 	}, err
 }
 
-func (s *CatsService) CreateCat(cat sqlc.CreateCatParams) (gin.H, error) {
+func (svc *CatsService) CreateCat(cat sqlc.CreateCatParams) (gin.H, error) {
 	ctx := context.Background()
-	queries := sqlc.New(s.db)
+	queries := sqlc.New(svc.db)
 	result, err := queries.CreateCat(ctx, cat)
 	if err != nil {
 		return gin.H{}, err

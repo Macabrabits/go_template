@@ -1,0 +1,29 @@
+#############
+# go
+#############
+test:
+	@go test -timeout 30s github.com/macabrabits/go_template/services -cover ./...
+vuln:
+	# go install golang.org/x/vuln/cmd/govulncheck@latest
+	@govulncheck ./...
+sqlgen:
+	# go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+	@sqlc generate
+swag:
+	# go install github.com/swaggo/swag/cmd/swag@latest
+	@swag init
+migrate:
+	@docker run --rm -v $$PWD/db/schema:/migrations --network go_base_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' up 1
+rollback:
+	@docker run --rm -v $$PWD/db/schema:/migrations --network go_base_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' down 1
+
+#############
+# docker
+#############	
+up:
+	@docker-compose up -d
+up_debug:
+	# go install github.com/go-delve/delve/cmd/dlv@latest
+	@docker-compose -f docker-compose.yml -f docker-compose-debug.yml up -d
+down:
+	@docker-compose down

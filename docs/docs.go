@@ -108,12 +108,22 @@ const docTemplate = `{
         },
         "services.Cat": {
             "type": "object",
+            "required": [
+                "age",
+                "breed",
+                "name"
+            ],
             "properties": {
                 "age": {
-                    "type": "integer"
+                    "type": "integer",
+                    "maximum": 25,
+                    "minimum": 0
                 },
                 "breed": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
