@@ -3,9 +3,12 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/macabrabits/go_template/configs"
+	"github.com/macabrabits/go_template/controller"
 )
 
-func Initialize() {
+func Initialize(
+	catsCotnroller *controller.CatsController,
+) {
 	// Initialize Router
 	router := gin.Default()
 
@@ -17,7 +20,7 @@ func Initialize() {
 	cfg := configs.GetConfig()
 
 	// Initialize Routes
-	initializeRoutes(router)
+	initializeRoutes(router, catsCotnroller)
 
 	// Run the server
 	router.Run("0.0.0.0:" + cfg.Port)

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/macabrabits/go_template/controller"
+	"github.com/macabrabits/go_template/db"
 	"github.com/macabrabits/go_template/router"
+	"github.com/macabrabits/go_template/services"
 )
 
 //	@title			Swagger Example API
@@ -24,5 +27,12 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
-	router.Initialize()
+	db, err := db.Initialize()
+	if err != nil {
+		panic(err)
+	}
+	catsService := services.NewCatsService(db)
+	catsController := controller.NewCatsController(&catsService)
+
+	router.Initialize(&catsController)
 }
