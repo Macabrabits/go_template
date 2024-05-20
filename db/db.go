@@ -4,22 +4,21 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/macabrabits/go_template/configs"
-	"log"
 )
 
-func Db() *sql.DB {
+func Initialize() (*sql.DB, error) {
 	cfg := configs.GetConfig().MysqlCFG
 	// Get a database handle.
 	var err error
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	pingErr := db.Ping()
 	if pingErr != nil {
-		log.Fatal(pingErr)
+		return nil, err
 	}
-	fmt.Println("Connected!")
-	return db
+	fmt.Println("Database Connected!")
+	return db, nil
 }

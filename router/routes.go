@@ -10,7 +10,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func initializeRoutes(router *gin.Engine) {
+func initializeRoutes(router *gin.Engine, controller *controller.CatsController) {
 	// handler.InitializeHandler()
 
 	basePath := "/api/v1"

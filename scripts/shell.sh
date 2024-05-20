@@ -1,6 +1,10 @@
 go mod init example/base
 go run ./cmd/app
 go build ./cmd/app
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+go mod tidy github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+export PATH=$PATH:$GOPATH/bin
+
 
 docker run -it --rm \
     -w "/app" \

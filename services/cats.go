@@ -1,35 +1,34 @@
 package services
 
 import (
+	"context"
+	"database/sql"
 	"github.com/gin-gonic/gin"
-	db "github.com/macabrabits/go_template/db"
+	sqlc "github.com/macabrabits/go_template/sqlc"
 )
+
+type CatsService struct {
+	db *sql.DB
+}
 
 type Cat struct {
 	Id    int64  `json:"id"`
 	Name  string `json:"name"  validate:"required"`
-	Age   int    `json:"age"   validate:"required,gte=0,lte=25"`
+	Age   int8   `json:"age"   validate:"required,gte=0,lte=25"`
 	Breed string `json:"breed" validate:"required"`
 }
 
-func toTest(name string) string {
-	return "hello " + name
+func NewCatsService(db *sql.DB) CatsService {
+	return CatsService{db}
 }
 
-func GetCats() (gin.H, error) {
-	var cats []Cat
-	rows, err := db.Db().Query("SELECT * FROM cats")
-	for rows.Next() {
-		var cat Cat
-		if err := rows.Scan(&cat.Id, &cat.Name, &cat.Age, &cat.Breed); err != nil {
-			return nil, err
-		}
-		cats = append(cats, cat)
-	}
+func (s *CatsService) GetCats() (gin.H, error) {
+	ctx := context.Background()
+	queries := sqlc.New(s.db)
+	cats, err := queries.ListCats(ctx)
 	if err != nil {
 		return gin.H{}, err
 	}
-	defer rows.Close()
 
 	return gin.H{
 		"message": "success",
@@ -37,18 +36,17 @@ func GetCats() (gin.H, error) {
 	}, err
 }
 
-func CreateCat(cat Cat) (gin.H, error) {
-	_, err := db.Db().Exec("INSERT INTO `cats` (`name`, `age`, `breed`) VALUES (?, ?, ?)",
-		cat.Name,
-		cat.Age,
-		cat.Breed,
-	)
+func (s *CatsService) CreateCat(cat sqlc.CreateCatParams) (gin.H, error) {
+	ctx := context.Background()
+	queries := sqlc.New(s.db)
+	result, err := queries.CreateCat(ctx, cat)
 	if err != nil {
 		return gin.H{}, err
 	}
+	id, err := result.LastInsertId()
 	res := gin.H{
 		"message": "cat create successfully",
-		"data":    cat,
+		"data":    gin.H{"id": id},
 	}
 	return res, err
 }

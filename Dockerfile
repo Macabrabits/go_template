@@ -34,7 +34,7 @@ CMD ["air", "-c", ".air.toml"]
   -o api-golang
   
 #------------------------------------------------
-FROM scratch
+FROM alpine:3.19.1
 ENV GIN_MODE=release
 WORKDIR /
 COPY --from=build-production /etc/passwd /etc/passwd

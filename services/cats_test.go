@@ -6,7 +6,8 @@ import (
 
 func TestTest(t *testing.T) {
 	param := "world of tests"
-	msg := toTest(param)
+	// msg := toTest(param)
+	msg := "todo"
 	expected := "hello world of tests"
 	if msg != expected {
 		t.Errorf("toTest(%q) = %q; want %q", param, msg, expected)
