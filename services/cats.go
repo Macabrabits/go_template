@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"database/sql"
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/macabrabits/go_template/db/sqlc"
 )
@@ -25,6 +27,7 @@ func NewCatsService(db *sql.DB) CatsService {
 }
 
 func (svc *CatsService) GetCats() (gin.H, error) {
+	fmt.Println("midtrace")
 	ctx := context.Background()
 	queries := sqlc.New(svc.db)
 	cats, err := queries.ListCats(ctx)

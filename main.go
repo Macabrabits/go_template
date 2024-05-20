@@ -1,6 +1,15 @@
 package main
 
 import (
+	"context"
+	"errors"
+	// "log"
+	// "net"
+	// "net/http"
+	"os"
+	"os/signal"
+	// "time"
+
 	"github.com/macabrabits/go_template/controller"
 	"github.com/macabrabits/go_template/db"
 	"github.com/macabrabits/go_template/router"
@@ -27,12 +36,27 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
+	// Handle SIGINT (CTRL+C) gracefully.
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
+	// Set up OpenTelemetry.
+	otelShutdown, err := setupOTelSDK(ctx)
+	if err != nil {
+		return
+	}
+	// Handle shutdown properly so nothing leaks.
+	defer func() {
+		err = errors.Join(err, otelShutdown(context.Background()))
+	}()
+
 	db, err := db.Initialize()
 	if err != nil {
 		panic(err)
 	}
+
 	catsService := services.NewCatsService(db)
 	catsController := controller.NewCatsController(&catsService)
-
 	router.Initialize(&catsController)
+
 }

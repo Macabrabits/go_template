@@ -27,3 +27,8 @@ up_debug:
 	@docker-compose -f docker-compose.yml -f docker-compose-debug.yml up -d
 down:
 	@docker-compose down
+
+
+
+amend:
+	@git commit -a --amend --no-edit && git push -f

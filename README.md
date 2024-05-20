@@ -46,8 +46,9 @@
     OK - sqlc
     OK - vulnerability scan
     OK - migrations
+    OK - traces - very unsatisfied
     production build / ci/cd pipeline
-    implement logs, metrics and traces monitoring
+    implement logs, metrics monitoring
     unit tests - suffering
     authentication
     authorization
