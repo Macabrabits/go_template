@@ -1,25 +1,20 @@
-FROM golang:1.22.2-bullseye AS build-base
+FROM golang:1.22.3-bullseye AS build-base
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/go/pkg/mod \
   --mount=type=cache,target=/root/.cache/go-build \
   go mod download
 
-RUN go install github.com/swaggo/swag/cmd/swag@latest
-
+RUN go install github.com/swaggo/swag/cmd/swag@latest 
 #------------------------------------------------
-FROM build-base AS dev
-# Install air for hot reload & delve for debugging
-RUN go install github.com/cosmtrek/air@latest && \
-  go install github.com/go-delve/delve/cmd/dlv@latest
-COPY . .
-CMD ["air", "-c", ".air.toml"]
-#------------------------------------------------
-FROM golang:1.22-alpine AS dev2
+FROM golang:1.22.3-alpine AS dev
 # Install air for hot reload & delve for debugging
 WORKDIR /app
 RUN go install github.com/cosmtrek/air@latest && \
-  go install github.com/go-delve/delve/cmd/dlv@latest
+  go install golang.org/x/vuln/cmd/govulncheck@latest && \
+  go install github.com/go-delve/delve/cmd/dlv@latest && \
+  go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest && \
+  go install github.com/swaggo/swag/cmd/swag@latest
 COPY go.mod go.sum ./
 RUN go mod download
 CMD ["air", "-c", ".air.toml"]

@@ -1,6 +1,8 @@
 #############
 # go
 #############
+expor_path:
+	@export PATH=$PATH:$GOPATH/bin
 test:
 	@go test -timeout 30s github.com/macabrabits/go_template/services -cover ./...
 vuln:
