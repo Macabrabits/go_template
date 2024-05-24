@@ -18,7 +18,7 @@ services:
       - DBPASS=root
       - DBUSER=root
       - DBHOST=mysql
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=app,service.version=0.1.0"
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=app,service.version=0.1.0
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       # - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4317
       

@@ -47,6 +47,7 @@
     OK - vulnerability scan
     OK - migrations
     OK - traces - very unsatisfied
+    OK - metrics creation
     production build / ci/cd pipeline
     implement logs, metrics monitoring
     unit tests - suffering

@@ -7,8 +7,10 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/swaggo/swag v1.16.3
 	go.opentelemetry.io/otel v1.27.0
+	go.opentelemetry.io/otel/exporters/stdout/stdoutlog v0.3.0
 	go.opentelemetry.io/otel/log v0.3.0
 	go.opentelemetry.io/otel/sdk v1.27.0
+	go.opentelemetry.io/otel/sdk/log v0.3.0
 	go.opentelemetry.io/otel/sdk/metric v1.27.0
 )
 
@@ -60,8 +62,6 @@ require (
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.27.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.26.0
-	go.opentelemetry.io/otel/exporters/stdout/stdoutlog v0.3.0
-	go.opentelemetry.io/otel/sdk/log v0.3.0
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/net v0.25.0 // indirect

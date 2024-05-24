@@ -1,3 +1,4 @@
+// https://opentelemetry.io/docs/languages/go/getting-started/
 package main
 
 import (
