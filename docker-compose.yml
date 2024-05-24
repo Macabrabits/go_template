@@ -18,8 +18,9 @@ services:
       - DBPASS=root
       - DBUSER=root
       - DBHOST=mysql
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=app,service.version=0.1.0"
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4317
+      # - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4317
       
     depends_on:
       - mysql
@@ -59,6 +60,7 @@ services:
       - ./otel-collector.yaml:/etc/otel-collector.yaml
     ports:
       - 4317:4317
+      - 9091:9090
 
   prometheus:
     image: prom/prometheus:v2.52.0

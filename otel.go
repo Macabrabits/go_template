@@ -3,12 +3,15 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/exporters/stdout/stdoutlog"
-	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
+	// "go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
+
 	// "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/log/global"
 	"go.opentelemetry.io/otel/propagation"
@@ -53,7 +56,7 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	otel.SetTracerProvider(tracerProvider)
 
 	// Set up meter provider.
-	meterProvider, err := newMeterProvider()
+	meterProvider, err := newMeterProvider(ctx)
 	if err != nil {
 		handleErr(err)
 		return
@@ -83,9 +86,6 @@ func newPropagator() propagation.TextMapPropagator {
 func newTraceProvider() (*trace.TracerProvider, error) {
 	ctx := context.Background()
 	traceExporter, err := otlptracegrpc.New(ctx)
-	// traceExporter, err := stdouttrace.New(
-	// 	stdouttrace.WithPrettyPrint(),
-	// )
 	if err != nil {
 		return nil, err
 	}
@@ -98,16 +98,16 @@ func newTraceProvider() (*trace.TracerProvider, error) {
 	return traceProvider, nil
 }
 
-func newMeterProvider() (*metric.MeterProvider, error) {
-	metricExporter, err := stdoutmetric.New()
+func newMeterProvider(ctx context.Context) (*metric.MeterProvider, error) {
+	metricExporter, err := otlpmetricgrpc.New(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create metrics exporter: %w", err)
 	}
 
 	meterProvider := metric.NewMeterProvider(
 		metric.WithReader(metric.NewPeriodicReader(metricExporter,
 			// Default is 1m. Set to 3s for demonstrative purposes.
-			metric.WithInterval(60*time.Second))),
+			metric.WithInterval(3*time.Second))),
 	)
 	return meterProvider, nil
 }

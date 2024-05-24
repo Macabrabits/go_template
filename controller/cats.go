@@ -28,8 +28,7 @@ func NewCatsController(s *services.CatsService) CatsController {
 }
 
 var (
-	tracer = otel.Tracer("example/namedtracer/app")
-	// meter  = otel.Meter("app")
+	tracer = otel.Tracer("testapp")
 )
 
 // GetCats godoc
@@ -89,5 +88,6 @@ func (s *CatsController) CreateCat(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "error", "error": err.Error()})
 		return
 	}
+
 	ctx.JSON(http.StatusOK, res)
 }

@@ -3,17 +3,21 @@ package main
 import (
 	"context"
 	"errors"
+
 	// "log"
 	// "net"
 	// "net/http"
 	"os"
 	"os/signal"
+
 	// "time"
 
 	"github.com/macabrabits/go_template/controller"
 	"github.com/macabrabits/go_template/db"
 	"github.com/macabrabits/go_template/router"
 	"github.com/macabrabits/go_template/services"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
 )
 
 //	@title			Swagger Example API
@@ -49,6 +53,8 @@ func main() {
 	defer func() {
 		err = errors.Join(err, otelShutdown(context.Background()))
 	}()
+	meter := otel.Meter("test-meter")
+	meter.Int64Counter("run", metric.WithDescription("The number of times the iteration ran"))
 
 	db, err := db.Initialize()
 	if err != nil {

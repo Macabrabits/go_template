@@ -7,6 +7,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/macabrabits/go_template/db/sqlc"
+
+	// "go.opentelemetry.io/contrib/bridges/otelslog"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
 )
 
 type CatsService struct {
@@ -21,6 +25,14 @@ type Cat struct {
 }
 
 // var sqlcNew = sqlc.New
+const name = "Cats"
+
+var (
+	// tracer = otel.Tracer(name)
+	meter = otel.Meter(name)
+	// logger =
+	rollCnt metric.Int64Counter
+)
 
 func NewCatsService(db *sql.DB) CatsService {
 	return CatsService{db}
@@ -44,10 +56,18 @@ func (svc *CatsService) GetCats() (gin.H, error) {
 func (svc *CatsService) CreateCat(cat sqlc.CreateCatParams) (gin.H, error) {
 	ctx := context.Background()
 	queries := sqlc.New(svc.db)
+	//Insert in the DB
 	result, err := queries.CreateCat(ctx, cat)
 	if err != nil {
-		return gin.H{}, err
+		return nil, err
 	}
+	//Add metric
+	rollCnt, err = meter.Int64Counter("created_cats", metric.WithDescription("Created cats"))
+	if err != nil {
+		return nil, fmt.Errorf("error saving the metric: %w", err)
+	}
+
+	rollCnt.Add(context.Background(), 1)
 	id, err := result.LastInsertId()
 	res := gin.H{
 		"message": "cat create successfully",
