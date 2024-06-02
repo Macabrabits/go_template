@@ -14,6 +14,7 @@ import (
 
 	"github.com/macabrabits/go_template/controller"
 	"github.com/macabrabits/go_template/db"
+	"github.com/macabrabits/go_template/repository"
 	"github.com/macabrabits/go_template/router"
 	"github.com/macabrabits/go_template/services"
 )
@@ -57,7 +58,8 @@ func main() {
 		panic(err)
 	}
 
-	catsService := services.NewCatsService(db)
+	catsRepository := repository.NewCatRepository(db)
+	catsService := services.NewCatsService(&catsRepository)
 	catsController := controller.NewCatsController(&catsService)
 	router.Initialize(&catsController)
 

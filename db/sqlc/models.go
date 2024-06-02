@@ -4,7 +4,20 @@
 
 package sqlc
 
+import (
+	"database/sql"
+)
+
 type Cat struct {
+	ID        uint64
+	Name      string
+	Age       int8
+	Breed     string
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+}
+
+type Dog struct {
 	ID    int32
 	Name  string
 	Age   int8

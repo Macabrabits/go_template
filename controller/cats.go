@@ -42,10 +42,10 @@ var (
 //	@Router			/cats [get]
 func (s *CatsController) GetCats(ctx *gin.Context) {
 	spanName := ctx.Request.Method + " - " + ctx.Request.URL.Path
-	_, span := tracer.Start(ctx, spanName)
+	tctx, span := tracer.Start(ctx, spanName)
 	defer span.End()
 
-	res, err := s.svc.GetCats()
+	res, err := s.svc.GetCats(tctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "error", "error": err.Error()})
 		return
@@ -66,7 +66,7 @@ func (s *CatsController) GetCats(ctx *gin.Context) {
 //	@Router			/cats [post]
 func (s *CatsController) CreateCat(ctx *gin.Context) {
 	spanName := ctx.Request.Method + " - " + ctx.Request.URL.Path
-	_, span := tracer.Start(ctx, spanName)
+	tctx, span := tracer.Start(ctx, spanName)
 	defer span.End()
 
 	var cat sqlc.CreateCatParams
@@ -83,7 +83,7 @@ func (s *CatsController) CreateCat(ctx *gin.Context) {
 		return
 	}
 
-	res, err := s.svc.CreateCat(cat)
+	res, err := s.svc.CreateCat(tctx, cat)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "error", "error": err.Error()})
 		return
