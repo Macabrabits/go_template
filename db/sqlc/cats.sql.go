@@ -25,8 +25,27 @@ func (q *Queries) CreateCat(ctx context.Context, arg CreateCatParams) (sql.Resul
 	return q.db.ExecContext(ctx, createCat, arg.Name, arg.Age, arg.Breed)
 }
 
+const getCat = `-- name: GetCat :one
+SELECT id, name, age, breed, created_at, updated_at FROM cats 
+WHERE id = ?
+`
+
+func (q *Queries) GetCat(ctx context.Context, id uint64) (Cat, error) {
+	row := q.db.QueryRowContext(ctx, getCat, id)
+	var i Cat
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Age,
+		&i.Breed,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const listCats = `-- name: ListCats :many
-SELECT id, name, age, breed FROM cats ORDER BY ` + "`" + `id` + "`" + ` DESC LIMIT 10
+SELECT id, name, age, breed, created_at, updated_at FROM cats ORDER BY ` + "`" + `id` + "`" + ` DESC LIMIT 10
 `
 
 func (q *Queries) ListCats(ctx context.Context) ([]Cat, error) {
@@ -43,6 +62,8 @@ func (q *Queries) ListCats(ctx context.Context) ([]Cat, error) {
 			&i.Name,
 			&i.Age,
 			&i.Breed,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}

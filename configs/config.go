@@ -21,11 +21,12 @@ func GetConfig() Config {
 	cfg := Config{
 		Port: config("8080", os.Getenv("PORT")),
 		MysqlCFG: mysql.Config{
-			User:   config("root", os.Getenv("DBUSER")),
-			Passwd: config("root", os.Getenv("DBPASS")),
-			Net:    "tcp",
-			Addr:   config("localhost", os.Getenv("DBHOST")) + ":3306",
-			DBName: "app",
+			User:      config("root", os.Getenv("DBUSER")),
+			Passwd:    config("root", os.Getenv("DBPASS")),
+			Net:       "tcp",
+			Addr:      config("localhost", os.Getenv("DBHOST")) + ":3306",
+			DBName:    "app",
+			ParseTime: true,
 		},
 	}
 	return cfg

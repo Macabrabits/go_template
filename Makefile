@@ -17,9 +17,9 @@ swag:
 	# go install github.com/swaggo/swag/cmd/swag@latest
 	@swag init
 migrate:
-	@docker run --rm -v $$PWD/db/schema:/migrations --network go_base_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' up 1
+	@docker run --rm -v $$PWD/db/schema:/migrations --network go_template_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' up 1
 rollback:
-	@docker run --rm -v $$PWD/db/schema:/migrations --network go_base_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' down 1
+	@docker run --rm -v $$PWD/db/schema:/migrations --network go_template_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' down 1
 
 #############
 # docker
