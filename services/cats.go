@@ -2,14 +2,12 @@ package services
 
 import (
 	"context"
-	// "database/sql"
 	"fmt"
-
 	"github.com/gin-gonic/gin"
+
 	"github.com/macabrabits/go_template/db/sqlc"
 	"github.com/macabrabits/go_template/repository"
 
-	// "go.opentelemetry.io/contrib/bridges/otelslog"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
 )
@@ -26,7 +24,6 @@ type Cat struct {
 	Breed string `json:"breed" validate:"required"`
 }
 
-// var sqlcNew = sqlc.New
 const name = "Cats"
 
 var (
@@ -37,19 +34,14 @@ var (
 )
 
 func NewCatsService(
-	// db *sql.DB,
 	repository *repository.CatRepository,
 ) CatsService {
 	return CatsService{
-		// db,
 		repository,
 	}
 }
 
 func (svc *CatsService) GetCats(ctx context.Context) (gin.H, error) {
-	// ctx := context.Background()
-	// queries := sqlc.New(svc.db)
-	// cats, err := queries.ListCats(ctx)
 	cats, err := svc.repository.List(ctx)
 	if err != nil {
 		return nil, err
@@ -62,8 +54,6 @@ func (svc *CatsService) GetCats(ctx context.Context) (gin.H, error) {
 }
 
 func (svc *CatsService) CreateCat(ctx context.Context, params sqlc.CreateCatParams) (gin.H, error) {
-	// ctx := context.Background()
-	// queries := sqlc.New(svc.db)
 	//Insert in the DB
 	result, err := svc.repository.Create(ctx, params)
 	if err != nil {
@@ -74,8 +64,8 @@ func (svc *CatsService) CreateCat(ctx context.Context, params sqlc.CreateCatPara
 	if err != nil {
 		return nil, fmt.Errorf("error saving the metric: %w", err)
 	}
-
 	rollCnt.Add(context.Background(), 1)
+
 	id, err := result.LastInsertId()
 	res := gin.H{
 		"message": "cat create successfully",
