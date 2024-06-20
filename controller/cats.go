@@ -40,6 +40,7 @@ var (
 //	@Produce		json
 //	@Success		200	{object}	JSONResultList
 //	@Router			/cats [get]
+//	@Security		BearerAuth
 func (s *CatsController) GetCats(ctx *gin.Context) {
 	spanName := ctx.Request.Method + " - " + ctx.Request.URL.Path
 	tctx, span := tracer.Start(ctx, spanName)
@@ -64,6 +65,7 @@ func (s *CatsController) GetCats(ctx *gin.Context) {
 //	@Produce		json
 //	@Success		200	{object}	JSONResult
 //	@Router			/cats [post]
+//	@Security		BearerAuth
 func (s *CatsController) CreateCat(ctx *gin.Context) {
 	spanName := ctx.Request.Method + " - " + ctx.Request.URL.Path
 	tctx, span := tracer.Start(ctx, spanName)

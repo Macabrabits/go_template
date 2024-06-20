@@ -5,7 +5,7 @@ services:
       # dockerfile: ./Dockerfile
       target: dev
     ports:
-      - 8080:8080
+      - 8082:8080
     volumes:
       # - type: bind
       #   source: .
@@ -21,6 +21,12 @@ services:
       - OTEL_RESOURCE_ATTRIBUTES=service.name=app,service.version=0.1.0
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       # - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4317
+      - KEYCLOAK_CLIENT_ID=appclient
+      - KEYCLOAK_CLIENT_SECRET=5gplu6KShV8gN5vOlEqGA0LfFydBeLwV
+      - KEYCLOAK_REDIRECT_URL=http://localhost:8082/api/v1/auth2/callback
+      - KEYCLOAK_PUBLIC_URL=http://mykeycloak:8080/realms/app
+      - KEYCLOAK_ISSUER_URL=http://mykeycloak:8080/realms/app
+      
       
     depends_on:
       - mysql
@@ -72,4 +78,16 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:1.57
     ports:
-      - 16686:16686      
+      - 16686:16686
+
+  mykeycloak:
+    image: quay.io/keycloak/keycloak:24.0.5
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      # - KC_HOSTNAME=localhost
+      - KC_METRICS_ENABLED=false
+    # command: start --hostname-port=8082 --optimized
+    command: start-dev

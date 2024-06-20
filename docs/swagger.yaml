@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  controller.AuthResponse:
+    properties:
+      data:
+        type: string
+      message:
+        type: string
+    type: object
   controller.JSONResult:
     properties:
       data:
@@ -14,6 +21,31 @@ definitions:
           $ref: '#/definitions/services.Cat'
         type: array
       message:
+        type: string
+    type: object
+  services.AuthParams:
+    properties:
+      password:
+        example: test
+        type: string
+      username:
+        example: appuser
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  services.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        example: 300
+        type: integer
+      refresh_expires_in:
+        example: 1800
+        type: integer
+      refresh_token:
         type: string
     type: object
   services.Cat:
@@ -36,7 +68,7 @@ definitions:
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: localhost:8080
+host: localhost:8082
 info:
   contact:
     email: support@swagger.io
@@ -50,6 +82,93 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /auth:
+    get:
+      consumes:
+      - application/json
+      description: Auth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AuthResponse'
+      security:
+      - BearerAuth: []
+      summary: Auth
+      tags:
+      - Auth
+  /auth/callback:
+    post:
+      consumes:
+      - application/json
+      description: AuthCallback
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AuthResponse'
+      summary: AuthCallback
+      tags:
+      - Auth
+  /auth/gettoken:
+    post:
+      consumes:
+      - application/json
+      description: GetToken
+      parameters:
+      - description: AuthParams
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/services.AuthParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.AuthResponse'
+      summary: GetToken
+      tags:
+      - Auth
+  /auth2/callback:
+    get:
+      description: Handles the OAuth2 callback from Keycloak
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Authentication successful!
+          schema:
+            type: string
+      summary: Handles authentication callback
+  /auth2/login:
+    get:
+      description: Redirects to Keycloak login page
+      produces:
+      - text/html
+      responses:
+        "302":
+          description: Redirects to Keycloak login page
+          schema:
+            type: string
+      summary: Initiates login process
+  /auth2/logout:
+    get:
+      description: Logs out the user from Keycloak
+      produces:
+      - text/html
+      responses:
+        "302":
+          description: Redirects to Keycloak logout
+          schema:
+            type: string
+      summary: Logs out the user
   /cats:
     get:
       consumes:
@@ -62,6 +181,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controller.JSONResultList'
+      security:
+      - BearerAuth: []
       summary: Get all cats
       tags:
       - accounts
@@ -83,10 +204,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controller.JSONResult'
+      security:
+      - BearerAuth: []
       summary: Create Cat
       tags:
       - accounts
 securityDefinitions:
-  BasicAuth:
-    type: basic
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

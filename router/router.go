@@ -8,6 +8,8 @@ import (
 
 func Initialize(
 	catsCotnroller *controller.CatsController,
+	authCotnroller *controller.AuthController,
+	auth2Cotnroller *controller.Auth2Controller,
 ) {
 	// Initialize Router
 	router := gin.Default()
@@ -20,7 +22,12 @@ func Initialize(
 	cfg := configs.GetConfig()
 
 	// Initialize Routes
-	initializeRoutes(router, catsCotnroller)
+	initializeRoutes(
+		router,
+		catsCotnroller,
+		authCotnroller,
+		auth2Cotnroller,
+	)
 
 	// Run the server
 	router.Run("0.0.0.0:" + cfg.Port)

@@ -15,11 +15,152 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "localhost:8082",
     "basePath": "/api/v1",
     "paths": {
+        "/auth": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Auth",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Auth",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.AuthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/callback": {
+            "post": {
+                "description": "AuthCallback",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "AuthCallback",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.AuthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/gettoken": {
+            "post": {
+                "description": "GetToken",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "GetToken",
+                "parameters": [
+                    {
+                        "description": "AuthParams",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.AuthParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.AuthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth2/callback": {
+            "get": {
+                "description": "Handles the OAuth2 callback from Keycloak",
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Handles authentication callback",
+                "responses": {
+                    "200": {
+                        "description": "Authentication successful!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth2/login": {
+            "get": {
+                "description": "Redirects to Keycloak login page",
+                "produces": [
+                    "text/html"
+                ],
+                "summary": "Initiates login process",
+                "responses": {
+                    "302": {
+                        "description": "Redirects to Keycloak login page",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth2/logout": {
+            "get": {
+                "description": "Logs out the user from Keycloak",
+                "produces": [
+                    "text/html"
+                ],
+                "summary": "Logs out the user",
+                "responses": {
+                    "302": {
+                        "description": "Redirects to Keycloak logout",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/cats": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all cats",
                 "consumes": [
                     "application/json"
@@ -41,6 +182,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Insert a Cat",
                 "consumes": [
                     "application/json"
@@ -75,6 +221,17 @@
         }
     },
     "definitions": {
+        "controller.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "controller.JSONResult": {
             "type": "object",
             "properties": {
@@ -96,6 +253,42 @@
                     }
                 },
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.AuthParams": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "test"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "appuser"
+                }
+            }
+        },
+        "services.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer",
+                    "example": 300
+                },
+                "refresh_expires_in": {
+                    "type": "integer",
+                    "example": 1800
+                },
+                "refresh_token": {
                     "type": "string"
                 }
             }
@@ -126,8 +319,10 @@
         }
     },
     "securityDefinitions": {
-        "BasicAuth": {
-            "type": "basic"
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     },
     "externalDocs": {

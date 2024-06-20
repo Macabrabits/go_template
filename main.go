@@ -2,21 +2,20 @@ package main
 
 import (
 	"context"
-	"errors"
-
-	// "log"
-	// "net"
-	// "net/http"
+	// "errors"
 	"os"
 	"os/signal"
 
-	// "time"
-
+	"github.com/coreos/go-oidc"
 	"github.com/macabrabits/go_template/controller"
 	"github.com/macabrabits/go_template/db"
 	"github.com/macabrabits/go_template/repository"
 	"github.com/macabrabits/go_template/router"
 	"github.com/macabrabits/go_template/services"
+)
+
+var (
+	keycloakIssuerURL = "http://mykeycloak:8080/realms/app"
 )
 
 //	@title			Swagger Example API
@@ -31,10 +30,12 @@ import (
 //	@license.name	Apache 2.0
 //	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-//	@host		localhost:8080
+//	@host		localhost:8082
 //	@BasePath	/api/v1
 
-//	@securityDefinitions.basic	BasicAuth
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
 
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
@@ -43,17 +44,23 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	// Set up OpenTelemetry.
-	otelShutdown, err := setupOTelSDK(ctx)
-	if err != nil {
-		return
-	}
-	// Handle shutdown properly so nothing leaks.
-	defer func() {
-		err = errors.Join(err, otelShutdown(context.Background()))
-	}()
+	// // Set up OpenTelemetry.
+	// otelShutdown, err := setupOTelSDK(ctx)
+	// if err != nil {
+	// 	return
+	// }
+	// // Handle shutdown properly so nothing leaks.
+	// defer func() {
+	// 	err = errors.Join(err, otelShutdown(context.Background()))
+	// }()
 
 	db, err := db.Initialize()
+	if err != nil {
+		panic(err)
+	}
+
+	// Create OIDC provider
+	oidcProvider, err := oidc.NewProvider(ctx, keycloakIssuerURL)
 	if err != nil {
 		panic(err)
 	}
@@ -61,6 +68,9 @@ func main() {
 	catsRepository := repository.NewCatRepository(db)
 	catsService := services.NewCatsService(&catsRepository)
 	catsController := controller.NewCatsController(&catsService)
-	router.Initialize(&catsController)
+	authService := services.NewAuthsService()
+	authController := controller.NewAuthController(&authService)
+	auth2Controller := controller.NewAuth2Controller(oidcProvider)
 
+	router.Initialize(&catsController, &authController, &auth2Controller)
 }

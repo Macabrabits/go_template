@@ -15,6 +15,7 @@ sqlgen:
 	@sqlc generate
 swag:
 	# go install github.com/swaggo/swag/cmd/swag@latest
+	@swag fmt
 	@swag init
 migrate:
 	@docker run --rm -v $$PWD/db/schema:/migrations --network go_template_default migrate/migrate -path=/migrations/ -database 'mysql://root:root@tcp(mysql:3306)/app' up 1
