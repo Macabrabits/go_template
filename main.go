@@ -37,6 +37,16 @@ var (
 //	@in							header
 //	@name						Authorization
 
+//	@securitydefinitions.oauth2.implicit	OAuth2Implicit
+//	@tokenUrl								http://mykeycloak:8080/realms/app/protocol/openid-connect/token
+//	@authorizationurl						http://mykeycloak:8080/realms/app/protocol/openid-connect/auth
+//	@scope.openid							Grants read access
+
+// //	@securityDefinitions.oauth2.application	OAuth2Application
+// //	@tokenUrl								http://mykeycloak:8080/realms/app/protocol/openid-connect/token
+// //	@authorizationurl						http://mykeycloak:8080/realms/app/protocol/openid-connect/auth
+// //	@scope.openid							Grants read access
+
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {

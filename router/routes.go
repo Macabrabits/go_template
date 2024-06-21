@@ -23,7 +23,7 @@ func initializeRoutes(
 	docs.SwaggerInfo.BasePath = basePath
 	cats := router.Group(basePath + "/cats")
 	cats.Use(auth2Controller.AuthMiddleware())
-	cats.Use(auth2Controller.RefreshTokenIfNeeded())
+	// cats.Use(auth2Controller.RefreshTokenIfNeeded())
 	// cats.Use(authController.Auth)
 	{
 		cats.GET("/", catsController.GetCats)
@@ -43,6 +43,7 @@ func initializeRoutes(
 	{
 
 		auth2.GET("/", auth2Controller.IndexHandler)
+		auth2.POST("/login", auth2Controller.LoginHandler())
 		auth2.GET("/login", auth2Controller.LoginHandler())
 		auth2.GET("/callback", auth2Controller.CallbackHandler())
 		auth2.GET("/logout", auth2Controller.LogoutHandler)

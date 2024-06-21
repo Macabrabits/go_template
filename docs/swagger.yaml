@@ -147,6 +147,8 @@ paths:
           schema:
             type: string
       summary: Handles authentication callback
+      tags:
+      - OAuth2
   /auth2/login:
     get:
       description: Redirects to Keycloak login page
@@ -158,6 +160,8 @@ paths:
           schema:
             type: string
       summary: Initiates login process
+      tags:
+      - OAuth2
   /auth2/logout:
     get:
       description: Logs out the user from Keycloak
@@ -169,6 +173,8 @@ paths:
           schema:
             type: string
       summary: Logs out the user
+      tags:
+      - OAuth2
   /cats:
     get:
       consumes:
@@ -182,10 +188,10 @@ paths:
           schema:
             $ref: '#/definitions/controller.JSONResultList'
       security:
-      - BearerAuth: []
+      - OAuth2Implicit: []
       summary: Get all cats
       tags:
-      - accounts
+      - Cats
     post:
       consumes:
       - application/json
@@ -205,13 +211,19 @@ paths:
           schema:
             $ref: '#/definitions/controller.JSONResult'
       security:
-      - BearerAuth: []
+      - OAuth2Implicit: []
       summary: Create Cat
       tags:
-      - accounts
+      - Cats
 securityDefinitions:
   BearerAuth:
     in: header
     name: Authorization
     type: apiKey
+  OAuth2Implicit:
+    authorizationUrl: http://mykeycloak:8080/realms/app/protocol/openid-connect/auth
+    flow: implicit
+    scopes:
+      openid: Grants read access
+    type: oauth2
 swagger: "2.0"

@@ -115,6 +115,9 @@ const docTemplate = `{
                 "produces": [
                     "text/plain"
                 ],
+                "tags": [
+                    "OAuth2"
+                ],
                 "summary": "Handles authentication callback",
                 "responses": {
                     "200": {
@@ -131,6 +134,9 @@ const docTemplate = `{
                 "description": "Redirects to Keycloak login page",
                 "produces": [
                     "text/html"
+                ],
+                "tags": [
+                    "OAuth2"
                 ],
                 "summary": "Initiates login process",
                 "responses": {
@@ -149,6 +155,9 @@ const docTemplate = `{
                 "produces": [
                     "text/html"
                 ],
+                "tags": [
+                    "OAuth2"
+                ],
                 "summary": "Logs out the user",
                 "responses": {
                     "302": {
@@ -164,7 +173,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "BearerAuth": []
+                        "OAuth2Implicit": []
                     }
                 ],
                 "description": "Get all cats",
@@ -175,7 +184,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "accounts"
+                    "Cats"
                 ],
                 "summary": "Get all cats",
                 "responses": {
@@ -190,7 +199,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "BearerAuth": []
+                        "OAuth2Implicit": []
                     }
                 ],
                 "description": "Insert a Cat",
@@ -201,7 +210,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "accounts"
+                    "Cats"
                 ],
                 "summary": "Create Cat",
                 "parameters": [
@@ -329,6 +338,14 @@ const docTemplate = `{
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
+        },
+        "OAuth2Implicit": {
+            "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "http://mykeycloak:8080/realms/app/protocol/openid-connect/auth",
+            "scopes": {
+                "openid": "Grants read access"
+            }
         }
     },
     "externalDocs": {

@@ -46,6 +46,7 @@ func (s *Auth2Controller) IndexHandler(c *gin.Context) {
 
 // @Summary		Initiates login process
 // @Description	Redirects to Keycloak login page
+// @Tags			OAuth2
 // @Produce		html
 // @Success		302	{string}	string	"Redirects to Keycloak login page"
 // @Router			/auth2/login [get]
@@ -67,6 +68,7 @@ func (s *Auth2Controller) LoginHandler() gin.HandlerFunc {
 
 // @Summary		Handles authentication callback
 // @Description	Handles the OAuth2 callback from Keycloak
+// @Tags			OAuth2
 // @Produce		plain
 // @Success		200	{string}	string	"Authentication successful!"
 // @Router			/auth2/callback [get]
@@ -109,18 +111,21 @@ func (s *Auth2Controller) CallbackHandler() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"OAuth2Token": token,
-			"rawIDToken":  rawIDToken,
-			"claims":      claims,
-			"idToken":     idToken,
-			"code":        code,
-		})
+		c.Redirect(http.StatusFound, "http://localhost:8082/swagger/index.html")
+
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"OAuth2Token": token,
+		// 	"rawIDToken":  rawIDToken,
+		// 	"claims":      claims,
+		// 	"idToken":     idToken,
+		// 	"code":        code,
+		// })
 	}
 }
 
 // @Summary		Logs out the user
 // @Description	Logs out the user from Keycloak
+// @Tags			OAuth2
 // @Produce		html
 // @Success		302	{string}	string	"Redirects to Keycloak logout"
 // @Router			/auth2/logout [get]
@@ -145,7 +150,7 @@ func (s *Auth2Controller) AuthMiddleware() gin.HandlerFunc {
 		// 	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Bearer token required"})
 		// 	return
 		// }
-		verifier := s.provider.Verifier(&oidc.Config{ClientID: keycloakClientID, SkipIssuerCheck: true})
+		verifier := s.provider.Verifier(&oidc.Config{ClientID: keycloakClientID, SkipIssuerCheck: true, SkipClientIDCheck: true})
 		_, span := tracer.Start(tctx, "verify")
 		idToken, err := verifier.Verify(c, token)
 		span.End()
@@ -153,6 +158,8 @@ func (s *Auth2Controller) AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token: " + err.Error()})
 			return
 		}
+
+		fmt.Println("I'm heere!")
 
 		var claims map[string]interface{}
 		if err := idToken.Claims(&claims); err != nil {
@@ -213,7 +220,7 @@ func (s *Auth2Controller) RefreshTokenIfNeeded() gin.HandlerFunc {
 			return
 		}
 
-		introspectionResponse, err := s.introspectToken(accessToken)		
+		introspectionResponse, err := s.introspectToken(accessToken)
 		if err != nil {
 			log.Printf("Failed to introspect token: %v", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to introspect token"})

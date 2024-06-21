@@ -35,12 +35,12 @@ var (
 //
 //	@Summary		Get all cats
 //	@Description	Get all cats
-//	@Tags			accounts
+//	@Tags			Cats
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	JSONResultList
 //	@Router			/cats [get]
-//	@Security		BearerAuth
+//	@Security		OAuth2Implicit
 func (s *CatsController) GetCats(ctx *gin.Context) {
 	spanName := ctx.Request.Method + " - " + ctx.Request.URL.Path
 	tctx, span := tracer.Start(ctx, spanName)
@@ -59,13 +59,13 @@ func (s *CatsController) GetCats(ctx *gin.Context) {
 //
 //	@Summary		Create Cat
 //	@Description	Insert a Cat
-//	@Tags			accounts
+//	@Tags			Cats
 //	@Param			request	body	services.Cat	true	"cat"	services.Cat
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	JSONResult
 //	@Router			/cats [post]
-//	@Security		BearerAuth
+//	@Security		OAuth2Implicit
 func (s *CatsController) CreateCat(ctx *gin.Context) {
 	spanName := ctx.Request.Method + " - " + ctx.Request.URL.Path
 	tctx, span := tracer.Start(ctx, spanName)
